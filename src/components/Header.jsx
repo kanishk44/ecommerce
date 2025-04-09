@@ -45,6 +45,16 @@ const Header = () => {
             >
               ABOUT
             </NavLink>
+            <NavLink
+              to="/contact"
+              className={({ isActive }) =>
+                `hover:text-gray-300 transition-colors ${
+                  isActive ? "text-blue-400" : ""
+                }`
+              }
+            >
+              CONTACT
+            </NavLink>
           </nav>
         </div>
         <button
