@@ -1,33 +1,10 @@
 import React from "react";
+import { useCart } from "../context/CartContext";
 
-const cartElements = [
-  {
-    title: "Colors",
-    price: 100,
-    imageUrl: "https://prasadyash2411.github.io/ecom-website/img/Album%201.png",
-    quantity: 2,
-  },
-  {
-    title: "Black and white Colors",
-    price: 50,
-    imageUrl: "https://prasadyash2411.github.io/ecom-website/img/Album%202.png",
-    quantity: 3,
-  },
-  {
-    title: "Yellow and Black Colors",
-    price: 70,
-    imageUrl: "https://prasadyash2411.github.io/ecom-website/img/Album%203.png",
-    quantity: 1,
-  },
-];
+const Cart = ({ isOpen, onClose }) => {
+  const { cartItems, removeFromCart, getCartTotal } = useCart();
 
-const Cart = ({ isOpen, onClose, onRemoveItem }) => {
   if (!isOpen) return null;
-
-  const total = cartElements.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
@@ -56,7 +33,7 @@ const Cart = ({ isOpen, onClose, onRemoveItem }) => {
         </div>
 
         <div className="space-y-4">
-          {cartElements.map((item, index) => (
+          {cartItems.map((item, index) => (
             <div key={index} className="flex items-center gap-4 border-b pb-4">
               <img
                 src={item.imageUrl}
@@ -71,7 +48,7 @@ const Cart = ({ isOpen, onClose, onRemoveItem }) => {
                 </p>
               </div>
               <button
-                onClick={() => onRemoveItem(index)}
+                onClick={() => removeFromCart(index)}
                 className="text-red-500 hover:text-red-700"
               >
                 <svg
@@ -94,7 +71,9 @@ const Cart = ({ isOpen, onClose, onRemoveItem }) => {
         <div className="mt-6 pt-4 border-t">
           <div className="flex justify-between items-center mb-4">
             <span className="text-xl font-bold text-gray-800">Total:</span>
-            <span className="text-xl font-bold text-gray-800">${total}</span>
+            <span className="text-xl font-bold text-gray-800">
+              ${getCartTotal()}
+            </span>
           </div>
           <button className="w-full bg-blue-500 text-white py-3 px-4 rounded-md font-semibold hover:bg-blue-600 transition-colors duration-200">
             PURCHASE
