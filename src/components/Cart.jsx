@@ -36,7 +36,7 @@ const Cart = ({ isOpen, onClose }) => {
           {cartItems.map((item, index) => (
             <div key={index} className="flex items-center gap-4 border-b pb-4">
               <img
-                src={item.imageUrl}
+                src={item.image}
                 alt={item.title}
                 className="w-20 h-20 object-cover rounded-md"
               />
