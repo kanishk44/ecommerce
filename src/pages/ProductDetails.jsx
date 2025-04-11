@@ -1,41 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import LoadingSpinner from "../components/LoadingSpinner";
+
+// Lazy load the product data
+const fetchProduct = async (id) => {
+  const response = await fetch(`https://fakestoreapi.com/products/${id}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch product");
+  }
+  return response.json();
+};
 
 function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    const loadProduct = async () => {
       try {
-        const response = await fetch(`https://fakestoreapi.com/products/${id}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch product");
-        }
-        const data = await response.json();
+        const data = await fetchProduct(id);
         setProduct(data);
       } catch (err) {
         setError(err.message);
-      } finally {
-        setLoading(false);
       }
     };
 
-    fetchProduct();
+    loadProduct();
   }, [id]);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
 
   if (error) {
     return (
@@ -48,13 +43,7 @@ function ProductDetails() {
   }
 
   if (!product) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
-          <p>Product not found</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner size="sm" />;
   }
 
   return (

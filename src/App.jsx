@@ -1,16 +1,19 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import Header from "./components/Header";
-import Home from "./pages/Home";
-import Store from "./pages/Store";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import ProductDetails from "./pages/ProductDetails";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
+import LoadingSpinner from "./components/LoadingSpinner";
+
+// Lazy load components
+const Home = lazy(() => import("./pages/Home"));
+const Store = lazy(() => import("./pages/Store"));
+const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
+const ProductDetails = lazy(() => import("./pages/ProductDetails"));
+const Login = lazy(() => import("./pages/Login"));
+const Signup = lazy(() => import("./pages/Signup"));
 
 function App() {
   return (
@@ -19,29 +22,31 @@ function App() {
         <CartProvider>
           <div className="min-h-screen bg-gray-100">
             <Header />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route
-                path="/store"
-                element={
-                  <ProtectedRoute>
-                    <Store />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route
-                path="/product/:id"
-                element={
-                  <ProtectedRoute>
-                    <ProductDetails />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-            </Routes>
+            <Suspense fallback={<LoadingSpinner />}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route
+                  path="/store"
+                  element={
+                    <ProtectedRoute>
+                      <Store />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route
+                  path="/product/:id"
+                  element={
+                    <ProtectedRoute>
+                      <ProductDetails />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+              </Routes>
+            </Suspense>
           </div>
         </CartProvider>
       </AuthProvider>
