@@ -19,6 +19,13 @@ function Header() {
     }
   };
 
+  const handleStoreClick = (e) => {
+    if (!currentUser) {
+      e.preventDefault();
+      navigate("/login");
+    }
+  };
+
   return (
     <header className="bg-gray-800 text-white py-4">
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
@@ -30,7 +37,11 @@ function Header() {
             <Link to="/" className="hover:text-gray-300 transition-colors">
               HOME
             </Link>
-            <Link to="/store" className="hover:text-gray-300 transition-colors">
+            <Link
+              to="/store"
+              className="hover:text-gray-300 transition-colors"
+              onClick={handleStoreClick}
+            >
               STORE
             </Link>
             <Link to="/about" className="hover:text-gray-300 transition-colors">
